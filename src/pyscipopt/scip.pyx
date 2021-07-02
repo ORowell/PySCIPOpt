@@ -3226,6 +3226,9 @@ cdef class Model:
         """
         SCIPbendersSetSubproblemIsConvex(benders._benders, probnumber, isconvex)
 
+    def setBendersSubproblemUseLPsolve(self, Benders benders, probnumber, useLPsolve = True):
+        SCIPbendersSetSubproblemUseLPsolve(benders._benders, probnumber, useLPsolve)
+
     def setupBendersSubproblem(self, probnumber, Benders benders = None, Solution solution = None, checktype = PY_SCIP_BENDERSENFOTYPE.LP):
         """ sets up the Benders' subproblem given the master problem solution
 
