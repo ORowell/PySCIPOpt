@@ -1149,6 +1149,7 @@ cdef extern from "scip/scip.h":
     SCIP_RETCODE SCIPcheckBendersSubproblemOptimality(SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Bool* optimal)
     SCIP_RETCODE SCIPincludeBendersDefaultCuts(SCIP* scip, SCIP_BENDERS* benders)
     void SCIPbendersSetSubproblemIsConvex(SCIP_BENDERS* benders, int probnumber, SCIP_Bool isconvex)
+    void SCIPbendersSetSubproblemUseLPsolve(SCIP_BENDERS* benders, int probnumber, SCIP_Bool useLPsolve)
 
     # Benders' decomposition cuts plugin
     SCIP_RETCODE SCIPincludeBenderscut(SCIP* scip,
