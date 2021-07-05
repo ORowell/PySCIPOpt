@@ -1125,6 +1125,8 @@ cdef extern from "scip/scip.h":
                                    SCIP_RETCODE (*bendersfreesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber),
                                    SCIP_BENDERSDATA* bendersdata)
     SCIP_BENDERS* SCIPfindBenders(SCIP* scip, const char* name)
+    SCIP_RETCODE SCIPinitialiseBendersSubproblem(SCIP* scip, SCIP_BENDERS* benders, int probnumber, SCIP_Bool* success)
+    SCIP_RETCODE SCIPinitialiseBendersLPSubproblem(SCIP* scip, SCIP_BENDERS* benders, int probnumber)
     SCIP_RETCODE SCIPactivateBenders(SCIP* scip, SCIP_BENDERS* benders, int nsubproblems)
     SCIP_BENDERSDATA* SCIPbendersGetData(SCIP_BENDERS* benders)
     SCIP_RETCODE SCIPcreateBendersDefault(SCIP* scip, SCIP** subproblems, int nsubproblems)
