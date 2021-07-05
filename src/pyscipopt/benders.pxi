@@ -123,11 +123,12 @@ cdef SCIP_RETCODE PyBendersExitsol (SCIP* scip, SCIP_BENDERS* benders) with gil:
     PyBenders.bendersexitsol()
     return SCIP_OKAY
 
-cdef SCIP_RETCODE PyBendersCreatesub (SCIP* scip, SCIP_BENDERS* benders, int probnumber) with gil:
+cdef SCIP_RETCODE PyBendersCreatesub (SCIP* scip, SCIP_BENDERS* benders, int probnumber, SCIP_Bool* initialise) with gil:
     cdef SCIP_BENDERSDATA* bendersdata
     bendersdata = SCIPbendersGetData(benders)
     PyBenders = <Benders>bendersdata
-    PyBenders.benderscreatesub(probnumber)
+    result_dict = PyBenders.benderscreatesub(probnumber)
+    initialise[0] = result_dict.get("initialise", False)
     return SCIP_OKAY
 
 cdef SCIP_RETCODE PyBendersPresubsolve (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, SCIP_Bool checkint, SCIP_Bool* infeasible, SCIP_Bool* auxviol, SCIP_Bool* skipsolve,  SCIP_RESULT* result) with gil:
