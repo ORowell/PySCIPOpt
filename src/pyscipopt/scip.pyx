@@ -3196,6 +3196,20 @@ cdef class Model:
         for d in lowerbounds.keys():
             SCIPbendersUpdateSubproblemLowerbound(_benders, d, lowerbounds[d])
 
+    def initialiseSubproblem(self, Benders benders, int probnumber):
+        """
+        """
+        cdef SCIP_Bool success
+
+        PY_SCIP_CALL( SCIPinitialiseBendersSubproblem(self._scip, benders._benders, probnumber, &success) )
+
+        return success
+
+    def initialiseLPSubproblem(self, Benders benders, int probnumber):
+        """
+        """        
+        PY_SCIP_CALL( SCIPinitialiseBendersLPSubproblem(self._scip, benders._benders, probnumber) )
+
     def activateBenders(self, Benders benders, int nsubproblems):
         """Activates the Benders' decomposition plugin with the input name
 
