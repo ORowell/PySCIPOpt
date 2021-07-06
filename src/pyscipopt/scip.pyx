@@ -3197,7 +3197,14 @@ cdef class Model:
             SCIPbendersUpdateSubproblemLowerbound(_benders, d, lowerbounds[d])
 
     def initialiseSubproblem(self, Benders benders, int probnumber):
-        """
+        """Initialises a MIP subproblem by putting the problem into SCIP_STAGE_SOLVING.
+
+        Keyword arguments:
+        benders -- the Benders' decomposition to which the subproblem belongs to
+        probnumber -- the number of the subproblem to be initialised
+
+        Returns:
+        success -- was the initialisation successsful
         """
         cdef SCIP_Bool success
 
@@ -3206,7 +3213,11 @@ cdef class Model:
         return success
 
     def initialiseLPSubproblem(self, Benders benders, int probnumber):
-        """
+        """Initialises an LP subproblem by putting the problem into probing mode.
+
+        Keyword arguments:
+        benders -- the Benders' decomposition to which the subproblem belongs to
+        probnumber -- the number of the subproblem to be initialised
         """        
         PY_SCIP_CALL( SCIPinitialiseBendersLPSubproblem(self._scip, benders._benders, probnumber) )
 
