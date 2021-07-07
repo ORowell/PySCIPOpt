@@ -40,4 +40,5 @@ from pyscipopt.scip      import PY_SCIP_LPSOLSTAT    as SCIP_LPSOLSTAT
 from pyscipopt.scip      import PY_SCIP_BRANCHDIR    as SCIP_BRANCHDIR
 from pyscipopt.scip      import PY_SCIP_BENDERSENFOTYPE as SCIP_BENDERSENFOTYPE
 from pyscipopt.scip      import PY_SCIP_BENDERSSUBTYPE as SCIP_BENDERSSUBTYPE
+from pyscipopt.scip      import PY_SCIP_BENDERSSUBSTATUS as SCIP_BENDERSSUBSTATUS
 from pyscipopt.scip      import PY_SCIP_ROWORIGINTYPE as SCIP_ROWORIGINTYPE

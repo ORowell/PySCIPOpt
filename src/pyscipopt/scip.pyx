@@ -219,12 +219,11 @@ cdef class PY_SCIP_BENDERSENFOTYPE:
     PSEUDO = SCIP_BENDERSENFOTYPE_PSEUDO
     CHECK  = SCIP_BENDERSENFOTYPE_CHECK
 
-cdef class PY_SCIP_BENDERSSUBTYPE:
-    CONVEXCONT      = SCIP_BENDERSSUBTYPE_CONVEXCONT
-    CONVEXDIS       = SCIP_BENDERSSUBTYPE_CONVEXDIS
-    NONCONVEXCONT   = SCIP_BENDERSSUBTYPE_NONCONVEXCONT
-    NONCONVEXDIS    = SCIP_BENDERSSUBTYPE_NONCONVEXDIS
-    UNKNOWN         = SCIP_BENDERSSUBTYPE_UNKNOWN
+cdef class PY_SCIP_BENDERSSUBSTATUS:
+    UNKNOWN     = SCIP_BENDERSSUBSTATUS_UNKNOWN
+    OPTIMAL     = SCIP_BENDERSSUBSTATUS_OPTIMAL
+    AUXVIOL     = SCIP_BENDERSSUBSTATUS_AUXVIOL
+    INFEAS      = SCIP_BENDERSSUBSTATUS_INFEAS
 
 cdef class PY_SCIP_ROWORIGINTYPE:
     UNSPEC = SCIP_ROWORIGINTYPE_UNSPEC
@@ -3739,7 +3738,7 @@ cdef class Model:
                                             PyBendersCopy, PyBendersFree, PyBendersInit, PyBendersExit, PyBendersInitpre,
                                             PyBendersExitpre, PyBendersInitsol, PyBendersExitsol, PyBendersGetvar,
                                             PyBendersCreatesub, PyBendersPresubsolve, PyBendersSolvesubconvex,
-                                            PyBendersSolvesub, PyBendersPostsolve, PyBendersFreesub,
+                                            PyBendersSolvesub, PyBendersPreCut, PyBendersPostsolve, PyBendersFreesub,
                                             <SCIP_BENDERSDATA*>benders))
         cdef SCIP_BENDERS* scip_benders
         scip_benders = SCIPfindBenders(self._scip, n)

@@ -253,6 +253,11 @@ cdef extern from "scip/scip.h":
         SCIP_BENDERSSUBTYPE_NONCONVEXCONT   = 2
         SCIP_BENDERSSUBTYPE_NONCONVEXDIS    = 3
         SCIP_BENDERSSUBTYPE_UNKNOWN         = 4
+    ctypedef enum SCIP_BENDERSSUBSTATUS:
+        SCIP_BENDERSSUBSTATUS_UNKNOWN    = 0
+        SCIP_BENDERSSUBSTATUS_OPTIMAL    = 1
+        SCIP_BENDERSSUBSTATUS_AUXVIOL    = 2
+        SCIP_BENDERSSUBSTATUS_INFEAS     = 3 
 
     ctypedef enum SCIP_LPSOLSTAT:
         SCIP_LPSOLSTAT_NOTSOLVED    = 0
@@ -1125,6 +1130,7 @@ cdef extern from "scip/scip.h":
                                    SCIP_RETCODE (*benderspresubsolve) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, SCIP_Bool checkint, SCIP_Bool* infeasible, SCIP_Bool* auxviol, SCIP_Bool* skipsolve,  SCIP_RESULT* result),
                                    SCIP_RETCODE (*benderssolvesubconvex) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Bool onlyconvex, SCIP_Real* objective, SCIP_RESULT* result),
                                    SCIP_RETCODE (*benderssolvesub) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Real* objective, SCIP_RESULT* result),
+                                   SCIP_RETCODE (*bendersprecut) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_RESULT result, SCIP_BENDERSENFOTYPE type, SCIP_Bool* subprobsolved, SCIP_BENDERSSUBSTATUS* substatus, int nsubproblems, SCIP_Bool infeasible, SCIP_Bool optimal),
                                    SCIP_RETCODE (*benderspostsolve) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, int* mergecands, int npriomergecands, int nmergecands, SCIP_Bool checkint, SCIP_Bool infeasible, SCIP_Bool* merged),
                                    SCIP_RETCODE (*bendersfreesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber),
                                    SCIP_BENDERSDATA* bendersdata)
