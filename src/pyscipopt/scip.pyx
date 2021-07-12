@@ -3684,8 +3684,8 @@ cdef class Model:
                                             PyBendersCopy, PyBendersFree, PyBendersInit, PyBendersExit, PyBendersInitpre,
                                             PyBendersExitpre, PyBendersInitsol, PyBendersExitsol, PyBendersGetvar,
                                             PyBendersCreatesub, PyBendersPresubsolve, PyBendersSolvesubconvex,
-                                            PyBendersSolvesub, PyBendersPreCut, PyBendersPostsolve, PyBendersFreesub,
-                                            <SCIP_BENDERSDATA*>benders))
+                                            PyBendersSolvesub, PyBendersPreCut, PyBendersPostsolve, PyBendersEnforceSol,
+                                            PyBendersFreesub, <SCIP_BENDERSDATA*>benders))
         cdef SCIP_BENDERS* scip_benders
         scip_benders = SCIPfindBenders(self._scip, n)
         benders.model = <Model>weakref.proxy(self)
