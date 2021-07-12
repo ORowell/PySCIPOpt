@@ -1132,6 +1132,7 @@ cdef extern from "scip/scip.h":
                                    SCIP_RETCODE (*benderssolvesub) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Real* objective, SCIP_RESULT* result),
                                    SCIP_RETCODE (*bendersprecut) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_RESULT result, SCIP_BENDERSENFOTYPE type, SCIP_Bool* subprobsolved, SCIP_BENDERSSUBSTATUS* substatus, int nsubproblems, SCIP_Bool infeasible, SCIP_Bool optimal),
                                    SCIP_RETCODE (*benderspostsolve) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, int* mergecands, int npriomergecands, int nmergecands, SCIP_Bool checkint, SCIP_Bool infeasible, SCIP_Bool* merged),
+                                   SCIP_RETCODE (*bendersenforcesol) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, SCIP_Bool checkint, SCIP_Bool* skipenforce),
                                    SCIP_RETCODE (*bendersfreesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber),
                                    SCIP_BENDERSDATA* bendersdata)
     SCIP_BENDERS* SCIPfindBenders(SCIP* scip, const char* name)
