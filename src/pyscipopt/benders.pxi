@@ -50,8 +50,16 @@ cdef class Benders:
         '''sets solve callback of Benders decomposition '''
         return {}
 
+    def bendersprecut(self, solution, result, enfotype, subproblemsolved, subproblemstatus, infeasible, optimal):
+        '''sets the pre cut generation callback of Benders decomposition'''
+        pass
+
     def benderspostsolve(self, solution, enfotype, mergecandidates, npriomergecands, checkint, infeasible):
         '''sets post-solve callback of Benders decomposition '''
+        return {}
+
+    def bendersenforcesol(self, solution, type, checkint):
+        '''sets the callback called before enforcing the solution to a subproblem'''
         return {}
 
     def bendersfreesub(self, probnumber):
@@ -172,6 +180,28 @@ cdef SCIP_RETCODE PyBendersSolvesub (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL
     result[0] = result_dict.get("result", <SCIP_RESULT>result[0])
     return SCIP_OKAY
 
+cdef SCIP_RETCODE PyBendersPreCut (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_RESULT result, SCIP_BENDERSENFOTYPE type,
+                                   SCIP_Bool* subprobsolved, SCIP_BENDERSSUBSTATUS* substatus, int nsubproblems, SCIP_Bool infeasible,
+                                   SCIP_Bool optimal) with gil:
+    cdef SCIP_BENDERSDATA* bendersdata
+    bendersdata = SCIPbendersGetData(benders)
+    PyBenders = <Benders>bendersdata
+
+    if sol == NULL:
+        solution = None
+    else:
+        solution = Solution.create(scip, sol)
+    enfotype = type
+
+    subproblemsolved = []
+    subproblemstatus = []
+    for i in range(nsubproblems):
+        subproblemsolved.append(bool(subprobsolved[i]))
+        subproblemstatus.append(substatus[i])
+
+    PyBenders.bendersprecut(solution, result, enfotype, subproblemsolved, subproblemstatus, infeasible, optimal)
+    return SCIP_OKAY
+
 cdef SCIP_RETCODE PyBendersPostsolve (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol,
         SCIP_BENDERSENFOTYPE type, int* mergecands, int npriomergecands, int nmergecands, SCIP_Bool checkint,
         SCIP_Bool infeasible, SCIP_Bool* merged) with  gil:
@@ -188,6 +218,21 @@ cdef SCIP_RETCODE PyBendersPostsolve (SCIP* scip, SCIP_BENDERS* benders, SCIP_SO
         mergecandidates.append(mergecands[i])
     result_dict = PyBenders.benderspostsolve(solution, enfotype, mergecandidates, npriomergecands, checkint, infeasible)
     merged[0] = result_dict.get("merged", False)
+    return SCIP_OKAY
+
+cdef SCIP_RETCODE PyBendersEnforceSol(SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol,
+        SCIP_BENDERSENFOTYPE type, SCIP_Bool checkint, SCIP_Bool* skipenforce) with gil:
+    cdef SCIP_BENDERSDATA* bendersdata
+    bendersdata = SCIPbendersGetData(benders)
+    PyBenders = <Benders>bendersdata
+    if sol == NULL:
+        solution = None
+    else:
+        solution = Solution.create(scip, sol)
+    enfotype = type
+
+    result_dict = PyBenders.bendersenforcesol(solution, type, checkint)
+    skipenforce[0] = result_dict.get("skipenforce", False)
     return SCIP_OKAY
 
 cdef SCIP_RETCODE PyBendersFreesub (SCIP* scip, SCIP_BENDERS* benders, int probnumber) with gil:
