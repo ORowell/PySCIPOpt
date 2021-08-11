@@ -219,6 +219,13 @@ cdef class PY_SCIP_BENDERSENFOTYPE:
     PSEUDO = SCIP_BENDERSENFOTYPE_PSEUDO
     CHECK  = SCIP_BENDERSENFOTYPE_CHECK
 
+cdef class PY_SCIP_BENDERSSUBTYPE:
+    CONVEXCONT      = SCIP_BENDERSSUBTYPE_CONVEXCONT
+    CONVEXDIS       = SCIP_BENDERSSUBTYPE_CONVEXDIS
+    NONCONVEXCONT   = SCIP_BENDERSSUBTYPE_NONCONVEXCONT
+    NONCONVEXDIS    = SCIP_BENDERSSUBTYPE_NONCONVEXDIS
+    UNKNOWN         = SCIP_BENDERSSUBTYPE_UNKNOWN
+
 cdef class PY_SCIP_ROWORIGINTYPE:
     UNSPEC = SCIP_ROWORIGINTYPE_UNSPEC
     CONS   = SCIP_ROWORIGINTYPE_CONS
@@ -3196,6 +3203,31 @@ cdef class Model:
         for d in lowerbounds.keys():
             SCIPbendersUpdateSubproblemLowerbound(_benders, d, lowerbounds[d])
 
+    def initialiseSubproblem(self, Benders benders, int probnumber):
+        """Initialises a MIP subproblem by putting the problem into SCIP_STAGE_SOLVING.
+
+        Keyword arguments:
+        benders -- the Benders' decomposition to which the subproblem belongs to
+        probnumber -- the number of the subproblem to be initialised
+
+        Returns:
+        success -- was the initialisation successsful
+        """
+        cdef SCIP_Bool success
+
+        PY_SCIP_CALL( SCIPinitialiseBendersSubproblem(self._scip, benders._benders, probnumber, &success) )
+
+        return success
+
+    def initialiseLPSubproblem(self, Benders benders, int probnumber):
+        """Initialises an LP subproblem by putting the problem into probing mode.
+
+        Keyword arguments:
+        benders -- the Benders' decomposition to which the subproblem belongs to
+        probnumber -- the number of the subproblem to be initialised
+        """        
+        PY_SCIP_CALL( SCIPinitialiseBendersLPSubproblem(self._scip, benders._benders, probnumber) )
+
     def activateBenders(self, Benders benders, int nsubproblems):
         """Activates the Benders' decomposition plugin with the input name
 
@@ -3215,6 +3247,35 @@ cdef class Model:
         isconvex -- can be used to specify whether the subproblem is convex
         """
         PY_SCIP_CALL(SCIPaddBendersSubproblem(self._scip, benders._benders, (<Model>subproblem)._scip))
+
+    def setBendersSubproblemType(self, Benders benders, int probnumber, subprobtype):
+        """Sets the subproblem type
+        The subproblem types are:
+            - Convex constraints with continuous variables
+            - Convex constraints with discrete variables
+            - Non-convex constraints with continuous variables
+            - Non-convex constraints with discrete variables
+
+        Keyword arguments:
+        benders -- the Benders' decomposition which contains the subproblem
+        probnumber -- the problem number of the subproblem that the type is to be set for
+        subprobtype -- the type of the subproblem
+        """
+        SCIPbendersSetSubproblemType(benders._benders, probnumber, subprobtype)
+
+    def getBendersSubproblemType(self, Benders benders, int probnumber):
+        """Gets the subproblem type
+        The subproblem types are:
+            - Convex constraints with continuous variables
+            - Convex constraints with discrete variables
+            - Non-convex constraints with continuous variables
+            - Non-convex constraints with discrete variables
+
+        Keyword arguments:
+        benders -- the Benders' decomposition which contains the subproblem
+        probnumber -- the problem number of the subproblem to find the type of
+        """
+        return SCIPbendersGetSubproblemType(benders._benders, probnumber)
 
     def setBendersSubproblemIsConvex(self, Benders benders, probnumber, isconvex = True):
         """sets a flag indicating whether the subproblem is convex

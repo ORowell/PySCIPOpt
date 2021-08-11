@@ -247,6 +247,13 @@ cdef extern from "scip/scip.h":
         SCIP_BENDERSENFOTYPE_PSEUDO  = 3
         SCIP_BENDERSENFOTYPE_CHECK   = 4
 
+    ctypedef enum SCIP_BENDERSSUBTYPE:
+        SCIP_BENDERSSUBTYPE_CONVEXCONT      = 0
+        SCIP_BENDERSSUBTYPE_CONVEXDIS       = 1
+        SCIP_BENDERSSUBTYPE_NONCONVEXCONT   = 2
+        SCIP_BENDERSSUBTYPE_NONCONVEXDIS    = 3
+        SCIP_BENDERSSUBTYPE_UNKNOWN         = 4
+
     ctypedef enum SCIP_LPSOLSTAT:
         SCIP_LPSOLSTAT_NOTSOLVED    = 0
         SCIP_LPSOLSTAT_OPTIMAL      = 1
@@ -1117,7 +1124,7 @@ cdef extern from "scip/scip.h":
                                    SCIP_RETCODE (*bendersinitsol) (SCIP* scip, SCIP_BENDERS* benders),
                                    SCIP_RETCODE (*bendersexitsol) (SCIP* scip, SCIP_BENDERS* benders),
                                    SCIP_RETCODE (*bendersgetvar) (SCIP* scip, SCIP_BENDERS* benders, SCIP_VAR* var, SCIP_VAR** mappedvar, int probnumber),
-                                   SCIP_RETCODE (*benderscreatesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber),
+                                   SCIP_RETCODE (*benderscreatesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber, SCIP_Bool* initialise),
                                    SCIP_RETCODE (*benderspresubsolve) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, SCIP_BENDERSENFOTYPE type, SCIP_Bool checkint, SCIP_Bool* infeasible, SCIP_Bool* auxviol, SCIP_Bool* skipsolve,  SCIP_RESULT* result),
                                    SCIP_RETCODE (*benderssolvesubconvex) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Bool onlyconvex, SCIP_Real* objective, SCIP_RESULT* result),
                                    SCIP_RETCODE (*benderssolvesub) (SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Real* objective, SCIP_RESULT* result),
@@ -1125,6 +1132,8 @@ cdef extern from "scip/scip.h":
                                    SCIP_RETCODE (*bendersfreesub) (SCIP* scip, SCIP_BENDERS* benders, int probnumber),
                                    SCIP_BENDERSDATA* bendersdata)
     SCIP_BENDERS* SCIPfindBenders(SCIP* scip, const char* name)
+    SCIP_RETCODE SCIPinitialiseBendersSubproblem(SCIP* scip, SCIP_BENDERS* benders, int probnumber, SCIP_Bool* success)
+    SCIP_RETCODE SCIPinitialiseBendersLPSubproblem(SCIP* scip, SCIP_BENDERS* benders, int probnumber)
     SCIP_RETCODE SCIPactivateBenders(SCIP* scip, SCIP_BENDERS* benders, int nsubproblems)
     SCIP_BENDERSDATA* SCIPbendersGetData(SCIP_BENDERS* benders)
     SCIP_RETCODE SCIPcreateBendersDefault(SCIP* scip, SCIP** subproblems, int nsubproblems)
@@ -1148,6 +1157,8 @@ cdef extern from "scip/scip.h":
     SCIP_VAR* SCIPbendersGetAuxiliaryVar(SCIP_BENDERS* benders, int probnumber)
     SCIP_RETCODE SCIPcheckBendersSubproblemOptimality(SCIP* scip, SCIP_BENDERS* benders, SCIP_SOL* sol, int probnumber, SCIP_Bool* optimal)
     SCIP_RETCODE SCIPincludeBendersDefaultCuts(SCIP* scip, SCIP_BENDERS* benders)
+    void SCIPbendersSetSubproblemType(SCIP_BENDERS* benders, int probnumber, SCIP_BENDERSSUBTYPE subprobtype)
+    SCIP_BENDERSSUBTYPE SCIPbendersGetSubproblemType(SCIP_BENDERS* benders, int probnumber)
     void SCIPbendersSetSubproblemIsConvex(SCIP_BENDERS* benders, int probnumber, SCIP_Bool isconvex)
 
     # Benders' decomposition cuts plugin
